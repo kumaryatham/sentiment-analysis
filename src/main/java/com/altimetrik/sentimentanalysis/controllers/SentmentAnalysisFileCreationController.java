@@ -30,7 +30,7 @@ public class SentmentAnalysisFileCreationController{
 		FILE_PATH=fifilePathleOperationUtils.getFilePath();
 	  
 		try {
-			 if((fileKeyword !=null && !fileKeyword.isEmpty()) || FILE_PATH !=null ) {
+			 if((fileKeyword !=null && !fileKeyword.isEmpty()) && FILE_PATH !=null ) {
 		     log.info("INSDIE Try ==> class : SentmentAnalysisFileCreationController , Method : "
 		     		+ "fileCreationOnDynamicSearchKeyword() , the Keyword is "+fileKeyword +FILE_PATH) ;
 			 boolean isFileCreated=FileOperationUtils.createFile(fileKeyword, fifilePathleOperationUtils); 

@@ -29,7 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		log.info("SecurityConfig.class inside configure method entered");
 
-		authenticationManagerBuilder.inMemoryAuthentication().withUser("admin").password("admin").roles("ADMIN",
+		authenticationManagerBuilder.inMemoryAuthentication().withUser("admin").password("admin").
+		roles("ADMIN",
 				"USER");
 
 		log.info("SecurityConfig.class inside configure method ending");

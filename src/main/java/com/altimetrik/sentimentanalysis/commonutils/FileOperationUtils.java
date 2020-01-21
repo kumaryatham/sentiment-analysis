@@ -104,7 +104,7 @@ public class FileOperationUtils {
 	    return isUpload;
 	}
 	public static void disconnect(FTPClient ftp){
-		log.error("INSDIE disconnect ==> class : FileOperationUtils , Method : "+
+		log.info("INSDIE disconnect ==> class : FileOperationUtils , Method : "+
 	     		 "createFile() ==> disconnect () Enter ==> Disconnect :"+ftp.isConnected());
 		if (ftp.isConnected()) {
 			try {
