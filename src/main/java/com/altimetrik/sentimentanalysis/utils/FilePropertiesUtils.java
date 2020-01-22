@@ -1,5 +1,7 @@
-package com.altimetrik.sentimentanalysis.commonutils;
+package com.altimetrik.sentimentanalysis.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,15 +11,28 @@ import org.springframework.context.annotation.Profile;
 @ConfigurationProperties(prefix = "app.keyword")
 @Configuration
 public class FilePropertiesUtils {  
-
+   
+	Logger log = LoggerFactory.getLogger(FilePropertiesUtils.class);
 	
 	private String filePath;
 	private String hostDir;
 	private String hostname;
 	private String userName;
 	private String password;
+    private String ftpEnabled;
+    
+    
+    
 
 	
+	public String getFtpEnabled() {
+		return ftpEnabled;
+	}
+
+	public void setFtpEnabled(String ftpEnabled) {
+		this.ftpEnabled = ftpEnabled;
+	}
+
 	public String getHostDir() {
 		return hostDir;
 	}
@@ -61,26 +76,26 @@ public class FilePropertiesUtils {
 	@Profile("stage")
 	@Bean
 	public String decPros() {
-		System.out.print("Dev Created"+this.filePath);
+		log.info("STAGE profile got Activated");
 		return "Stage Created";
 	}
 	
 	@Profile("dev")
 	@Bean
 	public String decProsDev() {
-		System.out.print("Dev Created"+this.filePath);
+		log.info("DEV profile got Activated");
 		return "Dev Created";
 	}
 	@Profile("test")
 	@Bean
 	public String decProsTest() {
-		System.out.print("Test Created"+this.filePath);
+		log.info("TEST profile got Activated");
 		return "Test Created";
 	}
 	@Profile("prod")
 	@Bean
 	public String decProsProd() {
-		System.out.print("Prod Created"+this.filePath);
+		log.info("PROD profile got Activated");
 		return "Prod Created";
 	}
 	

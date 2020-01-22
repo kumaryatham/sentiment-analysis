@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  *
  */
 
+@SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -29,21 +30,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		log.info("SecurityConfig.class inside configure method entered");
 
-		authenticationManagerBuilder.inMemoryAuthentication().withUser("admin").password("admin").
-		roles("ADMIN",
+		authenticationManagerBuilder.inMemoryAuthentication().withUser("admin").password("admin").roles("ADMIN",
 				"USER");
 
 		log.info("SecurityConfig.class inside configure method ending");
 	}
-	
-	/*
-	 * @Override public void configure(HttpSecurity http) { try { http
-	 * .antMatcher("/api/**") .authorizeRequests() .anyRequest().hasAnyRole("ADMIN")
-	 * .and() .httpBasic() .and() .csrf() .disable(); } catch (Exception e) {
-	 * e.printStackTrace(); } }
-	 */
+
+	@Override
+	public void configure(HttpSecurity http) {
+		try {
+			http.antMatcher("/**").authorizeRequests().
+			anyRequest().hasAnyRole("ADMIN").and().httpBasic().and()
+					.csrf().disable();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	 
 
+	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return NoOpPasswordEncoder.getInstance();

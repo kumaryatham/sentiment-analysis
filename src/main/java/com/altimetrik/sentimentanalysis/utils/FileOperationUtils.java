@@ -1,4 +1,4 @@
-package com.altimetrik.sentimentanalysis.commonutils;
+package com.altimetrik.sentimentanalysis.utils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,9 +15,49 @@ import org.apache.commons.net.ftp.FTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.altimetrik.sentimentanalysis.exception.FileOperationException;
+
 public class FileOperationUtils {
+	
 	static Logger log = LoggerFactory.getLogger(FileOperationUtils.class);
+	
 	public static boolean createFile(String fileKeyword,FilePropertiesUtils fifilePathleOperationUtils) {
+		
+		String FILE_NAME=fileKeyword+System.currentTimeMillis()+".txt";
+		File file = new File(fifilePathleOperationUtils.getFilePath()+File.separator+FILE_NAME);
+		boolean isFileUpload=false;
+		 log.info("INSDIE Try ==> class : FileOperationUtils , Method : "
+		     		+ "createFile() , the Keyword is "+fileKeyword +fifilePathleOperationUtils.getFilePath());
+			
+		try(FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+				BufferedWriter bw = new BufferedWriter(fw)) {
+
+			// if file doesnt exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+				log.info("INSDIE Try ==> class : FileOperationUtils , Method : "
+			     		+ "createFile() , AbsoluteFile Name"+file.getAbsoluteFile());
+			}
+			// true = append file
+			bw.write(fileKeyword);
+			isFileUpload=true;
+			if(isFileUpload) {
+				log.info("INSDIE Try ==> class : FileOperationUtils , Method : "
+			     		+ " createFile() try block"+isFileUpload);
+				return isFileUpload;	
+			}
+		
+		} catch (Exception e) {
+
+			log.error("INSDIE Catch ==> class : FileOperationUtils , Method : "
+		     		+ "createFile() catch block",e.getMessage());
+			throw new FileOperationException("File Operation's Failed Due to Path is not found / Space is not available ");
+		} 
+		
+		return isFileUpload;
+	}
+	
+	public static boolean createFileByUsingFTP(String fileKeyword,FilePropertiesUtils fifilePathleOperationUtils) {
 		FTPClient ftpclient=null;
 		String FILE_NAME=fileKeyword+System.currentTimeMillis()+".txt";
 		File file = new File(fifilePathleOperationUtils.getFilePath()+File.separator+FILE_NAME);
@@ -36,7 +76,6 @@ public class FileOperationUtils {
 			}
 			// true = append file
 			bw.write(fileKeyword);
-			System.out.println("Done");
 			
 			//Connecting remote server by using FTP client
 			ftpclient = ftpConnection(fifilePathleOperationUtils.getHostname(),fifilePathleOperationUtils.getUserName(),
@@ -51,8 +90,9 @@ public class FileOperationUtils {
 		
 		} catch (Exception e) {
 
-			log.info("INSDIE Catch ==> class : FileOperationUtils , Method : "
+			log.error("INSDIE Catch ==> class : FileOperationUtils , Method : "
 		     		+ "createFile() catch block",e.getMessage());
+			throw new FileOperationException("File Operation's Failed Due to Connection Failures");
 
 		} finally {
 			disconnect(ftpclient);
@@ -73,7 +113,8 @@ public class FileOperationUtils {
 		reply = ftp.getReplyCode();
 		if (!FTPReply.isPositiveCompletion(reply)) {
 			ftp.disconnect();
-			throw new Exception("Exception in connecting to FTP Server");
+			//Custom exception handler 
+			throw new FileOperationException("File Operation's Failed Due to Connection Failures");
 		}
 		ftp.login(user, pwd);
 		ftp.setFileType(FTP.BINARY_FILE_TYPE);
@@ -104,9 +145,10 @@ public class FileOperationUtils {
 	    return isUpload;
 	}
 	public static void disconnect(FTPClient ftp){
-		log.info("INSDIE disconnect ==> class : FileOperationUtils , Method : "+
-	     		 "createFile() ==> disconnect () Enter ==> Disconnect :"+ftp.isConnected());
-		if (ftp.isConnected()) {
+		
+		if (ftp !=null && ftp.isConnected()) {
+			log.info("INSDIE disconnect ==> class : FileOperationUtils , Method : "+
+		     		 "createFile() ==> disconnect () Enter ==> Disconnect :"+ftp.isConnected());
 			try {
 				ftp.logout();
 				ftp.disconnect();

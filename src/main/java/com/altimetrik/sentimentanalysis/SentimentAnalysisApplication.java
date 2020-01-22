@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-import com.altimetrik.sentimentanalysis.commonutils.FilePropertiesUtils;
+import com.altimetrik.sentimentanalysis.utils.FilePropertiesUtils;
 
 @SpringBootApplication
 public class SentimentAnalysisApplication {
